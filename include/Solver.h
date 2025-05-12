@@ -12,5 +12,6 @@ struct Solution {
 
 Solution solveBruteForce(const Dataset& dataset);
 Solution solveDynamicProgramming(const Dataset& dataset);
+Solution solveGreedy(const Dataset& dataset);
 
 #endif

@@ -15,7 +15,7 @@ void showAlgorithmMenu() {
     std::cout << "\n--- Escolha o Algoritmo ---\n";
     std::cout << "1. Força Bruta\n";
     std::cout << "2. Programação Dinâmica\n";
-    std::cout << "3. Guloso (em breve)\n";
+    std::cout << "3. Guloso\n";
     std::cout << "0. Voltar\n";
     std::cout << "Opção: ";
 }
@@ -73,9 +73,17 @@ int main() {
                             std::cout << "\n";
                             break;
                         }
-                        case 3:
-                            std::cout << "Algoritmo ainda não implementado.\n";
+                        case 3: {
+                            Solution sol = solveGreedy(d);
+                            std::cout << "\n>> Solução aproximada (Guloso):\n";
+                            std::cout << "Lucro total: " << sol.totalProfit << "\n";
+                            std::cout << "Peso total: " << sol.totalWeight << "\n";
+                            std::cout << "Paletes escolhidas: ";
+                            for (int id : sol.selectedPallets)
+                                std::cout << "P" << id << " ";
+                            std::cout << "\n";
                             break;
+                        }
                         case 0:
                             std::cout << "A voltar...\n";
                             break;

@@ -69,3 +69,34 @@ Solution solveDynamicProgramming(const Dataset& dataset) {
     std::reverse(selected.begin(), selected.end());
     return {totalWeight, dp[n][W], selected};
 }
+
+Solution solveGreedy(const Dataset& dataset) {
+    struct Item {
+        int id, weight, profit;
+        double ratio;
+    };
+
+    std::vector<Item> items;
+
+    for (const auto& p : dataset.pallets) {
+        items.push_back({p.id, p.weight, p.profit, (double)p.profit / p.weight});
+    }
+
+    std::sort(items.begin(), items.end(), [](const Item& a, const Item& b) {
+        return a.ratio > b.ratio;
+    });
+
+    int totalWeight = 0;
+    int totalProfit = 0;
+    std::vector<int> selected;
+
+    for (const auto& item : items) {
+        if (totalWeight + item.weight <= dataset.capacity) {
+            totalWeight += item.weight;
+            totalProfit += item.profit;
+            selected.push_back(item.id);
+        }
+    }
+
+    return {totalWeight, totalProfit, selected};
+}
