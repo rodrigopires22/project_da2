@@ -11,5 +11,6 @@ struct Solution {
 };
 
 Solution solveBruteForce(const Dataset& dataset);
+Solution solveDynamicProgramming(const Dataset& dataset);
 
 #endif

@@ -14,7 +14,7 @@ void showMainMenu() {
 void showAlgorithmMenu() {
     std::cout << "\n--- Escolha o Algoritmo ---\n";
     std::cout << "1. Força Bruta\n";
-    std::cout << "2. Programação Dinâmica (em breve)\n";
+    std::cout << "2. Programação Dinâmica\n";
     std::cout << "3. Guloso (em breve)\n";
     std::cout << "0. Voltar\n";
     std::cout << "Opção: ";
@@ -62,7 +62,17 @@ int main() {
                             std::cout << "\n";
                             break;
                         }
-                        case 2:
+                        case 2: {
+                            Solution sol = solveDynamicProgramming(d);
+                            std::cout << "\n>> Solução ótima (Programação Dinâmica):\n";
+                            std::cout << "Lucro total: " << sol.totalProfit << "\n";
+                            std::cout << "Peso total: " << sol.totalWeight << "\n";
+                            std::cout << "Paletes escolhidas: ";
+                            for (int id : sol.selectedPallets)
+                                std::cout << "P" << id << " ";
+                            std::cout << "\n";
+                            break;
+                        }
                         case 3:
                             std::cout << "Algoritmo ainda não implementado.\n";
                             break;
