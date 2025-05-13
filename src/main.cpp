@@ -1,6 +1,7 @@
 #include <iostream>
 #include <sstream>
 #include <iomanip>
+#include <chrono> 
 #include "Dataset.h"
 #include "Solver.h"
 
@@ -16,6 +17,7 @@ void showAlgorithmMenu() {
     std::cout << "1. Força Bruta\n";
     std::cout << "2. Programação Dinâmica\n";
     std::cout << "3. Guloso\n";
+    std::cout << "4. Algoritmo Genético\n";
     std::cout << "0. Voltar\n";
     std::cout << "Opção: ";
 }
@@ -52,7 +54,11 @@ int main() {
 
                     switch (algChoice) {
                         case 1: {
+                            auto start = std::chrono::high_resolution_clock::now();
                             Solution sol = solveBruteForce(d);
+                            auto end = std::chrono::high_resolution_clock::now();
+                            std::chrono::duration<double, std::milli> duration = end - start;
+
                             std::cout << "\n>> Solução ótima (Força Bruta):\n";
                             std::cout << "Lucro total: " << sol.totalProfit << "\n";
                             std::cout << "Peso total: " << sol.totalWeight << "\n";
@@ -60,10 +66,15 @@ int main() {
                             for (int id : sol.selectedPallets)
                                 std::cout << "P" << id << " ";
                             std::cout << "\n";
+                            std::cout << "Tempo de execução: " << duration.count() << " ms\n";
                             break;
                         }
                         case 2: {
+                            auto start = std::chrono::high_resolution_clock::now();
                             Solution sol = solveDynamicProgramming(d);
+                            auto end = std::chrono::high_resolution_clock::now();
+                            std::chrono::duration<double, std::milli> duration = end - start;
+
                             std::cout << "\n>> Solução ótima (Programação Dinâmica):\n";
                             std::cout << "Lucro total: " << sol.totalProfit << "\n";
                             std::cout << "Peso total: " << sol.totalWeight << "\n";
@@ -71,10 +82,15 @@ int main() {
                             for (int id : sol.selectedPallets)
                                 std::cout << "P" << id << " ";
                             std::cout << "\n";
+                            std::cout << "Tempo de execução: " << duration.count() << " ms\n";
                             break;
                         }
                         case 3: {
+                            auto start = std::chrono::high_resolution_clock::now();
                             Solution sol = solveGreedy(d);
+                            auto end = std::chrono::high_resolution_clock::now();
+                            std::chrono::duration<double, std::milli> duration = end - start;
+
                             std::cout << "\n>> Solução aproximada (Guloso):\n";
                             std::cout << "Lucro total: " << sol.totalProfit << "\n";
                             std::cout << "Peso total: " << sol.totalWeight << "\n";
@@ -82,6 +98,23 @@ int main() {
                             for (int id : sol.selectedPallets)
                                 std::cout << "P" << id << " ";
                             std::cout << "\n";
+                            std::cout << "Tempo de execução: " << duration.count() << " ms\n";
+                            break;
+                        }
+                        case 4: {
+                            auto start = std::chrono::high_resolution_clock::now();
+                            Solution sol = solveGeneticAlgorithm(d);
+                            auto end = std::chrono::high_resolution_clock::now();
+                            std::chrono::duration<double, std::milli> duration = end - start;
+
+                            std::cout << "\n>> Solução aproximada (Algoritmo Genético):\n";
+                            std::cout << "Lucro total: " << sol.totalProfit << "\n";
+                            std::cout << "Peso total: " << sol.totalWeight << "\n";
+                            std::cout << "Paletes escolhidas: ";
+                            for (int id : sol.selectedPallets)
+                                std::cout << "P" << id << " ";
+                            std::cout << "\n";
+                            std::cout << "Tempo de execução: " << duration.count() << " ms\n";
                             break;
                         }
                         case 0:

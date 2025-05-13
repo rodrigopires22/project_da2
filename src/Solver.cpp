@@ -2,6 +2,8 @@
 #include <cmath>
 #include <vector>
 #include <algorithm>
+#include <random>
+#include <ctime>
 
 Solution solveBruteForce(const Dataset& dataset) {
     int n = dataset.pallets.size();
@@ -99,4 +101,97 @@ Solution solveGreedy(const Dataset& dataset) {
     }
 
     return {totalWeight, totalProfit, selected};
+}
+
+Solution solveGeneticAlgorithm(const Dataset& dataset) {
+    const int POP_SIZE = 100;
+    const int MAX_GENERATIONS = 100;
+    const double MUTATION_RATE = 0.05;
+
+    int n = dataset.pallets.size();
+    int capacity = dataset.capacity;
+
+    std::mt19937 rng(static_cast<unsigned>(time(nullptr)));
+    std::uniform_real_distribution<> probDist(0.0, 1.0);
+    std::uniform_int_distribution<> indexDist(0, n - 1);
+
+    using Individual = std::vector<bool>;
+
+    auto fitness = [&](const Individual& ind) -> int {
+        int weight = 0, profit = 0;
+        for (int i = 0; i < n; ++i) {
+            if (ind[i]) {
+                weight += dataset.pallets[i].weight;
+                profit += dataset.pallets[i].profit;
+            }
+        }
+        return (weight <= capacity) ? profit : 0;
+    };
+
+    auto generateIndividual = [&]() -> Individual {
+        Individual ind(n, false);
+        for (int i = 0; i < n; ++i) {
+            ind[i] = probDist(rng) > 0.5;
+        }
+        return ind;
+    };
+
+    auto crossover = [&](const Individual& a, const Individual& b) -> Individual {
+        Individual child(n);
+        int point = indexDist(rng);
+        for (int i = 0; i < n; ++i)
+            child[i] = (i < point) ? a[i] : b[i];
+        return child;
+    };
+
+    auto mutate = [&](Individual& ind) {
+        for (int i = 0; i < n; ++i)
+            if (probDist(rng) < MUTATION_RATE)
+                ind[i] = !ind[i];
+    };
+
+    std::vector<Individual> population(POP_SIZE);
+    for (int i = 0; i < POP_SIZE; ++i)
+        population[i] = generateIndividual();
+
+    Individual bestInd;
+    int bestFitness = 0;
+
+    for (int gen = 0; gen < MAX_GENERATIONS; ++gen) {
+        std::vector<std::pair<int, Individual>> scored;
+
+        for (const auto& ind : population) {
+            int f = fitness(ind);
+            scored.emplace_back(f, ind);
+            if (f > bestFitness) {
+                bestFitness = f;
+                bestInd = ind;
+            }
+        }
+
+        std::sort(scored.rbegin(), scored.rend()); 
+        population.clear();
+
+        for (int i = 0; i < POP_SIZE / 4; ++i)
+            population.push_back(scored[i].second);
+
+        while (population.size() < POP_SIZE) {
+            const Individual& parent1 = scored[indexDist(rng) % (POP_SIZE / 2)].second;
+            const Individual& parent2 = scored[indexDist(rng) % (POP_SIZE / 2)].second;
+            Individual child = crossover(parent1, parent2);
+            mutate(child);
+            population.push_back(child);
+        }
+    }
+
+    int totalWeight = 0;
+    std::vector<int> selected;
+    for (int i = 0; i < n; ++i) {
+        if (bestInd[i]) {
+            totalWeight += dataset.pallets[i].weight;
+            selected.push_back(dataset.pallets[i].id);
+        }
+    }
+
+    return {totalWeight, bestFitness, selected};
 }
