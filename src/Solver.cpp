@@ -4,6 +4,9 @@
 #include <algorithm>
 #include <random>
 #include <ctime>
+#include <iostream>
+#include <stdexcept>
+
 
 Solution solveBruteForce(const Dataset& dataset) {
     int n = dataset.pallets.size();
@@ -104,16 +107,19 @@ Solution solveGreedy(const Dataset& dataset) {
 }
 
 Solution solveGeneticAlgorithm(const Dataset& dataset) {
-    const int POP_SIZE = 100;
-    const int MAX_GENERATIONS = 100;
+    const int POP_SIZE = 30;
+    const int MAX_GENERATIONS = 20;
     const double MUTATION_RATE = 0.05;
 
-    int n = dataset.pallets.size();
+    int n = static_cast<int>(dataset.pallets.size());
     int capacity = dataset.capacity;
+
+    if (n == 0) {
+        return {0, 0, {}};
+    }
 
     std::mt19937 rng(static_cast<unsigned>(time(nullptr)));
     std::uniform_real_distribution<> probDist(0.0, 1.0);
-    std::uniform_int_distribution<> indexDist(0, n - 1);
 
     using Individual = std::vector<bool>;
 
@@ -125,19 +131,23 @@ Solution solveGeneticAlgorithm(const Dataset& dataset) {
                 profit += dataset.pallets[i].profit;
             }
         }
-        return (weight <= capacity) ? profit : 0;
+        if (weight <= capacity) {
+            return profit;
+        } else {
+            return profit - 10 * (weight - capacity);
+        }
     };
 
     auto generateIndividual = [&]() -> Individual {
         Individual ind(n, false);
-        for (int i = 0; i < n; ++i) {
-            ind[i] = probDist(rng) > 0.5;
-        }
+        for (int i = 0; i < n; ++i)
+            ind[i] = probDist(rng) > 0.8;
         return ind;
     };
 
     auto crossover = [&](const Individual& a, const Individual& b) -> Individual {
         Individual child(n);
+        std::uniform_int_distribution<> indexDist(0, n - 1);
         int point = indexDist(rng);
         for (int i = 0; i < n; ++i)
             child[i] = (i < point) ? a[i] : b[i];
@@ -154,12 +164,11 @@ Solution solveGeneticAlgorithm(const Dataset& dataset) {
     for (int i = 0; i < POP_SIZE; ++i)
         population[i] = generateIndividual();
 
-    Individual bestInd;
-    int bestFitness = 0;
+    Individual bestInd(n, false);
+    int bestFitness = std::numeric_limits<int>::min();
 
     for (int gen = 0; gen < MAX_GENERATIONS; ++gen) {
         std::vector<std::pair<int, Individual>> scored;
-
         for (const auto& ind : population) {
             int f = fitness(ind);
             scored.emplace_back(f, ind);
@@ -169,19 +178,31 @@ Solution solveGeneticAlgorithm(const Dataset& dataset) {
             }
         }
 
-        std::sort(scored.rbegin(), scored.rend()); 
-        population.clear();
+        std::sort(scored.rbegin(), scored.rend());
 
-        for (int i = 0; i < POP_SIZE / 4; ++i)
-            population.push_back(scored[i].second);
+        int eliteSize = POP_SIZE / 4;
+        if (eliteSize < 1) eliteSize = 1;
 
-        while (population.size() < POP_SIZE) {
-            const Individual& parent1 = scored[indexDist(rng) % (POP_SIZE / 2)].second;
-            const Individual& parent2 = scored[indexDist(rng) % (POP_SIZE / 2)].second;
-            Individual child = crossover(parent1, parent2);
+        std::vector<Individual> newPopulation;
+        for (int i = 0; i < eliteSize; ++i)
+            newPopulation.push_back(scored[i].second);
+
+        std::uniform_int_distribution<> eliteIndexDist(0, eliteSize - 1);
+
+        while ((int)newPopulation.size() < POP_SIZE) {
+            int idx1 = eliteIndexDist(rng);
+            int idx2 = eliteIndexDist(rng);
+
+            Individual child = crossover(newPopulation[idx1], newPopulation[idx2]);
             mutate(child);
-            population.push_back(child);
+            newPopulation.push_back(child);
         }
+
+        population = std::move(newPopulation);
+    }
+
+    if ((int)bestInd.size() != n) {
+        return {0, 0, {}};
     }
 
     int totalWeight = 0;
