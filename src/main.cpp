@@ -10,8 +10,11 @@
 #include <sstream>
 #include <iomanip>
 #include <chrono> 
-#include "../include/Dataset.h"
-#include "../include/Solver.h"
+
+#include <fstream>
+#include "Dataset.h"
+#include "Solver.h"
+
 
 /**
  * @brief Mostra o menu principal ao utilizador.
@@ -36,6 +39,7 @@ void showAlgorithmMenu() {
     std::cout << "Opção: ";
 }
 
+
 /**
  * @brief Função principal do programa.
  * 
@@ -53,8 +57,20 @@ void showAlgorithmMenu() {
  * 
  * @return int Código de saída do programa (0 se encerrado com sucesso).
  */
+
+void writeCSVHeader(std::ofstream& out) {
+    out << "Dataset,Algoritmo,Tempo(ms),Lucro,Peso\n";
+}
+
+void appendResult(std::ofstream& out, const std::string& datasetId, const std::string& algName, 
+                  double timeMs, int profit, int weight) {
+    out << datasetId << "," << algName << "," << timeMs << "," << profit << "," << weight << "\n";
+}
+
 int main() {
     int opcao;
+    bool csvHeaderWritten = false;
+    std::ofstream csvOut;
 
     do {
         showMainMenu();
@@ -72,6 +88,15 @@ int main() {
                 std::string datasetId = ss.str();
 
                 Dataset d = loadDataset(datasetId);
+
+                if (!csvHeaderWritten) {
+                    csvOut.open("results.csv", std::ios::out);
+                    writeCSVHeader(csvOut);
+                    csvHeaderWritten = true;
+                } else {
+                    csvOut.open("results.csv", std::ios::app);
+                }
+
 
                 std::cout << "\nCapacidade do camião: " << d.capacity << " kg\n";
                 std::cout << "Número de paletes: " << d.pallets.size() << "\n";
@@ -100,6 +125,8 @@ int main() {
                                 std::cout << "P" << id << " ";
                             std::cout << "\n";
                             std::cout << "Tempo de execução: " << duration.count() << " ms\n";
+
+                            appendResult(csvOut, datasetId, "ForcaBruta", duration.count(), sol.totalProfit, sol.totalWeight);
                             break;
                         }
                         case 2: {
@@ -117,6 +144,8 @@ int main() {
                                 std::cout << "P" << id << " ";
                             std::cout << "\n";
                             std::cout << "Tempo de execução: " << duration.count() << " ms\n";
+
+                            appendResult(csvOut, datasetId, "ProgDinamica", duration.count(), sol.totalProfit, sol.totalWeight);
                             break;
                         }
                         case 3: {
@@ -134,6 +163,8 @@ int main() {
                                 std::cout << "P" << id << " ";
                             std::cout << "\n";
                             std::cout << "Tempo de execução: " << duration.count() << " ms\n";
+
+                            appendResult(csvOut, datasetId, "Guloso", duration.count(), sol.totalProfit, sol.totalWeight);
                             break;
                         }
                         case 4: {
@@ -151,6 +182,8 @@ int main() {
                                 std::cout << "P" << id << " ";
                             std::cout << "\n";
                             std::cout << "Tempo de execução: " << duration.count() << " ms\n";
+
+                            appendResult(csvOut, datasetId, "AlgGenetico", duration.count(), sol.totalProfit, sol.totalWeight);
                             break;
                         }
                         case 0:
@@ -161,6 +194,7 @@ int main() {
                     }
                 } while (algChoice != 0);
 
+                csvOut.close();
                 break;
             }
 

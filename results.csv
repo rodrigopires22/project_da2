@@ -1,0 +1,5 @@
+Dataset,Algoritmo,Tempo(ms),Lucro,Peso
+04,ForcaBruta,0.015095,27,451
+04,ProgDinamica,0.434071,161,517
+04,Guloso,0.032072,158,490
+04,AlgGenetico,12.6934,141,481
