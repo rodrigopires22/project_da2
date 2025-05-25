@@ -1,0 +1,123 @@
+\doxysection{C\+:/\+Users/\+User/\+Desktop/\+DA/project\+\_\+da2/src/\+Dataset.cpp File Reference}
+\hypertarget{_dataset_8cpp}{}\label{_dataset_8cpp}\index{C:/Users/User/Desktop/DA/project\_da2/src/Dataset.cpp@{C:/Users/User/Desktop/DA/project\_da2/src/Dataset.cpp}}
+
+
+Implementação da função para carregar um dataset de pallets a partir de ficheiros CSV.  
+
+
+{\ttfamily \#include "{}../include/\+Dataset.\+h"{}}\newline
+{\ttfamily \#include $<$fstream$>$}\newline
+{\ttfamily \#include $<$sstream$>$}\newline
+{\ttfamily \#include $<$iostream$>$}\newline
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{struct_dataset}{Dataset}} \mbox{\hyperlink{_dataset_8cpp_a62941e337fa81aae7831d5c4b3267c97}{load\+Dataset}} (const std\+::string \&dataset\+Id)
+\begin{DoxyCompactList}\small\item\em Carrega um dataset com base no identificador fornecido. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Implementação da função para carregar um dataset de pallets a partir de ficheiros CSV. 
+
+
+
+Definition in file \mbox{\hyperlink{_dataset_8cpp_source}{Dataset.\+cpp}}.
+
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{_dataset_8cpp_a62941e337fa81aae7831d5c4b3267c97}\index{Dataset.cpp@{Dataset.cpp}!loadDataset@{loadDataset}}
+\index{loadDataset@{loadDataset}!Dataset.cpp@{Dataset.cpp}}
+\doxysubsubsection{\texorpdfstring{loadDataset()}{loadDataset()}}
+{\footnotesize\ttfamily \label{_dataset_8cpp_a62941e337fa81aae7831d5c4b3267c97} 
+\mbox{\hyperlink{struct_dataset}{Dataset}} load\+Dataset (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{dataset\+Id}{}\end{DoxyParamCaption})}
+
+
+
+Carrega um dataset com base no identificador fornecido. 
+
+Carrega um dataset a partir de ficheiros CSV com base no identificador fornecido.
+
+Esta função lê dois ficheiros CSV\+:
+\begin{DoxyItemize}
+\item {\ttfamily Truck\+And\+Pallets\+\_\+\texorpdfstring{$<$}{<}dataset\+Id\texorpdfstring{$>$}{>}.csv}, que contém a capacidade do caminhão e o número de pallets;
+\item {\ttfamily Pallets\+\_\+\texorpdfstring{$<$}{<}dataset\+Id\texorpdfstring{$>$}{>}.csv}, que contém os dados individuais dos pallets (id, peso, lucro).
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}{Parameters}
+{\em dataset\+Id} & Identificador do dataset, usado para compor os nomes dos ficheiros. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\doxylink{struct_dataset}{Dataset} Estrutura contendo a capacidade do caminhão, número de pallets e a lista de pallets carregados.
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+Complexidade temporal\+: O(n), onde n é o número de pallets. 
+
+Complexidade espacial\+: O(n), para armazenar os dados dos pallets na memória. 
+\end{DoxyNote}
+\texorpdfstring{$<$}{<} Capacidade total do caminhão
+
+\texorpdfstring{$<$}{<} Número total de pallets disponíveis
+
+\texorpdfstring{$<$}{<} Identificador do pallet
+
+\texorpdfstring{$<$}{<} Peso do pallet
+
+\texorpdfstring{$<$}{<} Lucro associado ao pallet
+
+Definition at line \mbox{\hyperlink{_dataset_8cpp_source_l00024}{24}} of file \mbox{\hyperlink{_dataset_8cpp_source}{Dataset.\+cpp}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00025\ \ \ \ \ \mbox{\hyperlink{struct_dataset}{Dataset}}\ dataset;}
+\DoxyCodeLine{00026\ \ \ \ \ std::string\ base\ =\ \textcolor{stringliteral}{"{}data/"{}};}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{comment}{//\ Abre\ o\ ficheiro\ com\ informações\ do\ caminhão\ e\ número\ de\ pallets}}
+\DoxyCodeLine{00029\ \ \ \ \ std::ifstream\ truckFile(base\ +\ \textcolor{stringliteral}{"{}TruckAndPallets\_"{}}\ +\ datasetId\ +\ \textcolor{stringliteral}{"{}.csv"{}});}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keywordflow}{if}\ (!truckFile.is\_open())\ \{}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ std::cerr\ <<\ \textcolor{stringliteral}{"{}Erro\ ao\ abrir\ ficheiro\ TruckAndPallets\_"{}}\ <<\ datasetId\ <<\ \textcolor{stringliteral}{"{}.csv\(\backslash\)n"{}};}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ dataset;}
+\DoxyCodeLine{00033\ \ \ \ \ \}}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \ \ \ \ std::string\ line;}
+\DoxyCodeLine{00036\ \ \ \ \ getline(truckFile,\ line);\ \ \textcolor{comment}{//\ Ignora\ a\ linha\ de\ cabeçalho}}
+\DoxyCodeLine{00037\ \ \ \ \ getline(truckFile,\ line);\ \ \textcolor{comment}{//\ Lê\ a\ linha\ com\ os\ dados}}
+\DoxyCodeLine{00038\ \ \ \ \ std::stringstream\ ss(line);}
+\DoxyCodeLine{00039\ \ \ \ \ std::string\ token;}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \ \ \ \ getline(ss,\ token,\ \textcolor{charliteral}{','});}
+\DoxyCodeLine{00042\ \ \ \ \ dataset.\mbox{\hyperlink{struct_dataset_a7072473d5fc62266f7cfea2b7dab648b}{capacity}}\ =\ std::stoi(token);\ \ }
+\DoxyCodeLine{00043\ \ \ \ \ getline(ss,\ token,\ \textcolor{charliteral}{','});}
+\DoxyCodeLine{00044\ \ \ \ \ dataset.\mbox{\hyperlink{struct_dataset_aeedc30bdbe746643dc82a1f37214bfb7}{numPallets}}\ =\ std::stoi(token);\ \ }
+\DoxyCodeLine{00045\ \ \ \ \ truckFile.close();}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{comment}{//\ Abre\ o\ ficheiro\ com\ os\ dados\ individuais\ dos\ pallets}}
+\DoxyCodeLine{00048\ \ \ \ \ std::ifstream\ palletsFile(base\ +\ \textcolor{stringliteral}{"{}Pallets\_"{}}\ +\ datasetId\ +\ \textcolor{stringliteral}{"{}.csv"{}});}
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keywordflow}{if}\ (!palletsFile.is\_open())\ \{}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ std::cerr\ <<\ \textcolor{stringliteral}{"{}Erro\ ao\ abrir\ ficheiro\ Pallets\_"{}}\ <<\ datasetId\ <<\ \textcolor{stringliteral}{"{}.csv\(\backslash\)n"{}};}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ dataset;}
+\DoxyCodeLine{00052\ \ \ \ \ \}}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \ \ \ \ getline(palletsFile,\ line);\ \ \textcolor{comment}{//\ Ignora\ o\ cabeçalho}}
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keywordflow}{while}\ (getline(palletsFile,\ line))\ \{}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ std::stringstream\ ssP(line);}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_pallet}{Pallet}}\ p;}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ getline(ssP,\ token,\ \textcolor{charliteral}{','});}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ p.\mbox{\hyperlink{struct_pallet_a9e5a10be32ec564eeb8c62f057394cb0}{id}}\ =\ std::stoi(token);\ \ }
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ getline(ssP,\ token,\ \textcolor{charliteral}{','});}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ p.\mbox{\hyperlink{struct_pallet_a216a90fe257bc40e1f5412dc9627b322}{weight}}\ =\ std::stoi(token);\ \ }
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ getline(ssP,\ token,\ \textcolor{charliteral}{','});}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ p.\mbox{\hyperlink{struct_pallet_a73f875ee2c33b680d2d4ed218636a9fc}{profit}}\ =\ std::stoi(token);\ \ }
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ dataset.\mbox{\hyperlink{struct_dataset_a90b4bec88ec28f9a7680c5f3870995c5}{pallets}}.push\_back(p);}
+\DoxyCodeLine{00067\ \ \ \ \ \}}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \ \ \ \ palletsFile.close();}
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{keywordflow}{return}\ dataset;}
+\DoxyCodeLine{00071\ \}}
+
+\end{DoxyCode}

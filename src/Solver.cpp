@@ -1,4 +1,4 @@
-#include "Solver.h"
+#include "../include/Solver.h"
 #include <cmath>
 #include <vector>
 #include <algorithm>
@@ -8,6 +8,18 @@
 #include <stdexcept>
 
 
+/**
+ * @brief Resolve o problema da seleção de paletes utilizando o algoritmo de força bruta.
+ * 
+ * Gera todas as combinações possíveis de paletes (2^n) e seleciona aquela que oferece o maior lucro,
+ * respeitando a capacidade máxima do camião.
+ * 
+ * @param dataset Estrutura contendo a capacidade do camião e a lista de paletes.
+ * @return Solution Estrutura contendo o lucro total, peso total e as paletes selecionadas.
+ * 
+ * @note Complexidade temporal: O(2^n * n), onde n é o número de paletes (devido à enumeração de subconjuntos).
+ * @note Complexidade espacial: O(n), para armazenar a seleção atual e a melhor seleção.
+ */
 Solution solveBruteForce(const Dataset& dataset) {
     int n = dataset.pallets.size();
     int maxProfit = 0;
@@ -39,6 +51,19 @@ Solution solveBruteForce(const Dataset& dataset) {
     return {bestWeight, maxProfit, bestSelection};
 }
 
+
+/**
+ * @brief Resolve o problema da seleção de paletes utilizando programação dinâmica.
+ * 
+ * Utiliza uma tabela de subproblemas para calcular o lucro máximo possível dado um limite de peso.
+ * Ideal para conjuntos de paletes de tamanho moderado.
+ * 
+ * @param dataset Estrutura contendo a capacidade do camião e a lista de paletes.
+ * @return Solution Estrutura contendo o lucro total, peso total e as paletes selecionadas.
+ * 
+ * @note Complexidade temporal: O(n * W), onde n é o número de paletes e W é a capacidade máxima.
+ * @note Complexidade espacial: O(n * W), para a tabela de programação dinâmica.
+ */
 Solution solveDynamicProgramming(const Dataset& dataset) {
     int n = dataset.pallets.size();
     int W = dataset.capacity;
@@ -75,6 +100,19 @@ Solution solveDynamicProgramming(const Dataset& dataset) {
     return {totalWeight, dp[n][W], selected};
 }
 
+
+/**
+ * @brief Resolve o problema da seleção de paletes utilizando uma abordagem gulosa.
+ * 
+ * Ordena as paletes com base na razão lucro/peso e as seleciona enquanto houver capacidade.
+ * Não garante uma solução ótima, mas é eficiente e útil para grandes conjuntos de dados.
+ * 
+ * @param dataset Estrutura contendo a capacidade do camião e a lista de paletes.
+ * @return Solution Estrutura contendo o lucro total, peso total e as paletes selecionadas.
+ * 
+ * @note Complexidade temporal: O(n log n), devido à ordenação das paletes.
+ * @note Complexidade espacial: O(n), para armazenar os objetos ordenados.
+ */
 Solution solveGreedy(const Dataset& dataset) {
     struct Item {
         int id, weight, profit;
@@ -106,6 +144,19 @@ Solution solveGreedy(const Dataset& dataset) {
     return {totalWeight, totalProfit, selected};
 }
 
+/**
+ * @brief Resolve o problema da seleção de paletes utilizando um algoritmo genético.
+ * 
+ * Algoritmo evolutivo que simula a seleção natural. Mantém uma população de soluções candidatas
+ * e aplica cruzamento e mutação para evoluir soluções melhores.
+ * 
+ * @param dataset Estrutura contendo a capacidade do camião e a lista de paletes.
+ * @return Solution Estrutura contendo o lucro total, peso total e as paletes selecionadas.
+ * 
+ * @note Complexidade temporal: Aproximadamente O(G * P * n), onde G é o número de gerações,
+ *       P é o tamanho da população, e n é o número de paletes.
+ * @note Complexidade espacial: O(P * n), para armazenar a população.
+ */
 Solution solveGeneticAlgorithm(const Dataset& dataset) {
     const int POP_SIZE = 30;
     const int MAX_GENERATIONS = 20;
