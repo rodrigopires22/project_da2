@@ -1,0 +1,424 @@
+\doxysection{C\+:/\+Users/\+User/\+Desktop/\+DA/project\+\_\+da2/include/\+Solver.h File Reference}
+\hypertarget{_solver_8h}{}\label{_solver_8h}\index{C:/Users/User/Desktop/DA/project\_da2/include/Solver.h@{C:/Users/User/Desktop/DA/project\_da2/include/Solver.h}}
+
+
+Declaração das estruturas e funções para solucionar problemas de otimização de paletes.  
+
+
+{\ttfamily \#include "{}../include/\+Dataset.\+h"{}}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+\doxysubsubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_solution}{Solution}}
+\begin{DoxyCompactList}\small\item\em Estrutura que representa uma solução para a otimização de paletes. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{struct_solution}{Solution}} \mbox{\hyperlink{_solver_8h_a1877a81c5179d8b76a131a8e5cf60ec6}{solve\+Brute\+Force}} (const \mbox{\hyperlink{struct_dataset}{Dataset}} \&dataset)
+\begin{DoxyCompactList}\small\item\em Resolve o problema da otimização usando força bruta. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{struct_solution}{Solution}} \mbox{\hyperlink{_solver_8h_a86686c352c1458de0105b08cbb1df80a}{solve\+Dynamic\+Programming}} (const \mbox{\hyperlink{struct_dataset}{Dataset}} \&dataset)
+\begin{DoxyCompactList}\small\item\em Resolve o problema da otimização usando programação dinâmica. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{struct_solution}{Solution}} \mbox{\hyperlink{_solver_8h_abf315dde7ab51ffcaa7135d6f2208d42}{solve\+Greedy}} (const \mbox{\hyperlink{struct_dataset}{Dataset}} \&dataset)
+\begin{DoxyCompactList}\small\item\em Resolve o problema da otimização usando uma abordagem gulosa. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{struct_solution}{Solution}} \mbox{\hyperlink{_solver_8h_a5914694fdde47e7de0ac1f7e6337a22f}{solve\+Genetic\+Algorithm}} (const \mbox{\hyperlink{struct_dataset}{Dataset}} \&dataset)
+\begin{DoxyCompactList}\small\item\em Resolve o problema da otimização utilizando um algoritmo genético. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Declaração das estruturas e funções para solucionar problemas de otimização de paletes. 
+
+
+
+Definition in file \mbox{\hyperlink{_solver_8h_source}{Solver.\+h}}.
+
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{_solver_8h_a1877a81c5179d8b76a131a8e5cf60ec6}\index{Solver.h@{Solver.h}!solveBruteForce@{solveBruteForce}}
+\index{solveBruteForce@{solveBruteForce}!Solver.h@{Solver.h}}
+\doxysubsubsection{\texorpdfstring{solveBruteForce()}{solveBruteForce()}}
+{\footnotesize\ttfamily \label{_solver_8h_a1877a81c5179d8b76a131a8e5cf60ec6} 
+\mbox{\hyperlink{struct_solution}{Solution}} solve\+Brute\+Force (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_dataset}{Dataset}} \&}]{dataset}{}\end{DoxyParamCaption})}
+
+
+
+Resolve o problema da otimização usando força bruta. 
+
+Gera todas as combinações possíveis de paletes e escolhe a que proporciona o maior lucro sem exceder a capacidade.
+
+
+\begin{DoxyParams}{Parameters}
+{\em dataset} & Conjunto de paletes disponíveis. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Solução ótima encontrada.
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+Complexidade temporal\+: O(2\texorpdfstring{$^\wedge$}{\string^}n), onde n é o número de paletes. 
+
+Complexidade espacial\+: O(n), devido ao armazenamento da melhor combinação.
+\end{DoxyNote}
+Resolve o problema da otimização usando força bruta.
+
+Gera todas as combinações possíveis de paletes (2\texorpdfstring{$^\wedge$}{\string^}n) e seleciona aquela que oferece o maior lucro, respeitando a capacidade máxima do camião.
+
+
+\begin{DoxyParams}{Parameters}
+{\em dataset} & Estrutura contendo a capacidade do camião e a lista de paletes. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\doxylink{struct_solution}{Solution} Estrutura contendo o lucro total, peso total e as paletes selecionadas.
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+Complexidade temporal\+: O(2\texorpdfstring{$^\wedge$}{\string^}n \texorpdfstring{$\ast$}{*} n), onde n é o número de paletes (devido à enumeração de subconjuntos). 
+
+Complexidade espacial\+: O(n), para armazenar a seleção atual e a melhor seleção. 
+\end{DoxyNote}
+
+
+Definition at line \mbox{\hyperlink{_solver_8cpp_source_l00020}{20}} of file \mbox{\hyperlink{_solver_8cpp_source}{Solver.\+cpp}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keywordtype}{int}\ n\ =\ dataset.\mbox{\hyperlink{struct_dataset_a90b4bec88ec28f9a7680c5f3870995c5}{pallets}}.size();}
+\DoxyCodeLine{00022\ \ \ \ \ \textcolor{keywordtype}{int}\ maxProfit\ =\ 0;}
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keywordtype}{int}\ bestWeight\ =\ 0;}
+\DoxyCodeLine{00024\ \ \ \ \ std::vector<int>\ bestSelection;}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keywordtype}{int}\ totalComb\ =\ 1\ <<\ n;}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ mask\ =\ 0;\ mask\ <\ totalComb;\ ++mask)\ \{}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ currentWeight\ =\ 0;}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ currentProfit\ =\ 0;}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ std::vector<int>\ currentSelection;}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (mask\ \&\ (1\ <<\ i))\ \{}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ currentWeight\ +=\ dataset.\mbox{\hyperlink{struct_dataset_a90b4bec88ec28f9a7680c5f3870995c5}{pallets}}[i].weight;}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ currentProfit\ +=\ dataset.\mbox{\hyperlink{struct_dataset_a90b4bec88ec28f9a7680c5f3870995c5}{pallets}}[i].profit;}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ currentSelection.push\_back(dataset.\mbox{\hyperlink{struct_dataset_a90b4bec88ec28f9a7680c5f3870995c5}{pallets}}[i].id);}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (currentWeight\ <=\ dataset.capacity\ \&\&\ currentProfit\ >\ maxProfit)\ \{}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \ \ \ \ maxProfit\ =\ currentProfit;}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \ \ \ \ bestWeight\ =\ currentWeight;}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \ \ \ \ bestSelection\ =\ currentSelection;}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00046\ \ \ \ \ \}}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keywordflow}{return}\ \{bestWeight,\ maxProfit,\ bestSelection\};}
+\DoxyCodeLine{00049\ \}}
+
+\end{DoxyCode}
+\Hypertarget{_solver_8h_a86686c352c1458de0105b08cbb1df80a}\index{Solver.h@{Solver.h}!solveDynamicProgramming@{solveDynamicProgramming}}
+\index{solveDynamicProgramming@{solveDynamicProgramming}!Solver.h@{Solver.h}}
+\doxysubsubsection{\texorpdfstring{solveDynamicProgramming()}{solveDynamicProgramming()}}
+{\footnotesize\ttfamily \label{_solver_8h_a86686c352c1458de0105b08cbb1df80a} 
+\mbox{\hyperlink{struct_solution}{Solution}} solve\+Dynamic\+Programming (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_dataset}{Dataset}} \&}]{dataset}{}\end{DoxyParamCaption})}
+
+
+
+Resolve o problema da otimização usando programação dinâmica. 
+
+Utiliza uma abordagem bottom-\/up semelhante ao problema clássico da mochila 0/1.
+
+
+\begin{DoxyParams}{Parameters}
+{\em dataset} & Conjunto de paletes disponíveis. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Solução ótima encontrada por programação dinâmica.
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+Complexidade temporal\+: O(n \texorpdfstring{$\ast$}{*} W), onde n é o número de paletes e W a capacidade do camião. 
+
+Complexidade espacial\+: O(n \texorpdfstring{$\ast$}{*} W), para armazenar a matriz de soluções.
+\end{DoxyNote}
+Resolve o problema da otimização usando programação dinâmica.
+
+Utiliza uma tabela de subproblemas para calcular o lucro máximo possível dado um limite de peso. Ideal para conjuntos de paletes de tamanho moderado.
+
+
+\begin{DoxyParams}{Parameters}
+{\em dataset} & Estrutura contendo a capacidade do camião e a lista de paletes. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\doxylink{struct_solution}{Solution} Estrutura contendo o lucro total, peso total e as paletes selecionadas.
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+Complexidade temporal\+: O(n \texorpdfstring{$\ast$}{*} W), onde n é o número de paletes e W é a capacidade máxima. 
+
+Complexidade espacial\+: O(n \texorpdfstring{$\ast$}{*} W), para a tabela de programação dinâmica. 
+\end{DoxyNote}
+
+
+Definition at line \mbox{\hyperlink{_solver_8cpp_source_l00064}{64}} of file \mbox{\hyperlink{_solver_8cpp_source}{Solver.\+cpp}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{keywordtype}{int}\ n\ =\ dataset.\mbox{\hyperlink{struct_dataset_a90b4bec88ec28f9a7680c5f3870995c5}{pallets}}.size();}
+\DoxyCodeLine{00066\ \ \ \ \ \textcolor{keywordtype}{int}\ W\ =\ dataset.\mbox{\hyperlink{struct_dataset_a7072473d5fc62266f7cfea2b7dab648b}{capacity}};}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \ \ \ \ std::vector<std::vector<int>>\ dp(n\ +\ 1,\ std::vector<int>(W\ +\ 1,\ 0));}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 1;\ i\ <=\ n;\ ++i)\ \{}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ w\ =\ dataset.\mbox{\hyperlink{struct_dataset_a90b4bec88ec28f9a7680c5f3870995c5}{pallets}}[i\ -\/\ 1].weight;}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ p\ =\ dataset.\mbox{\hyperlink{struct_dataset_a90b4bec88ec28f9a7680c5f3870995c5}{pallets}}[i\ -\/\ 1].profit;}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ cap\ =\ 0;\ cap\ <=\ W;\ ++cap)\ \{}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (w\ >\ cap)}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dp[i][cap]\ =\ dp[i\ -\/\ 1][cap];}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dp[i][cap]\ =\ std::max(dp[i\ -\/\ 1][cap],\ dp[i\ -\/\ 1][cap\ -\/\ w]\ +\ p);}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00080\ \ \ \ \ \}}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ \ \ \ \ \textcolor{keywordtype}{int}\ cap\ =\ W;}
+\DoxyCodeLine{00083\ \ \ \ \ std::vector<int>\ selected;}
+\DoxyCodeLine{00084\ \ \ \ \ \textcolor{keywordtype}{int}\ totalWeight\ =\ 0;}
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ n;\ i\ >\ 0\ \&\&\ cap\ >\ 0;\ -\/-\/i)\ \{}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (dp[i][cap]\ !=\ dp[i\ -\/\ 1][cap])\ \{}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ w\ =\ dataset.\mbox{\hyperlink{struct_dataset_a90b4bec88ec28f9a7680c5f3870995c5}{pallets}}[i\ -\/\ 1].weight;}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ p\ =\ dataset.\mbox{\hyperlink{struct_dataset_a90b4bec88ec28f9a7680c5f3870995c5}{pallets}}[i\ -\/\ 1].profit;}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \ \ \ \ selected.push\_back(dataset.\mbox{\hyperlink{struct_dataset_a90b4bec88ec28f9a7680c5f3870995c5}{pallets}}[i\ -\/\ 1].id);}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \ \ \ \ cap\ -\/=\ w;}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \ \ \ \ totalWeight\ +=\ w;}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00094\ \ \ \ \ \}}
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00096\ \ \ \ \ std::reverse(selected.begin(),\ selected.end());}
+\DoxyCodeLine{00097\ \ \ \ \ \textcolor{keywordflow}{return}\ \{totalWeight,\ dp[n][W],\ selected\};}
+\DoxyCodeLine{00098\ \}}
+
+\end{DoxyCode}
+\Hypertarget{_solver_8h_a5914694fdde47e7de0ac1f7e6337a22f}\index{Solver.h@{Solver.h}!solveGeneticAlgorithm@{solveGeneticAlgorithm}}
+\index{solveGeneticAlgorithm@{solveGeneticAlgorithm}!Solver.h@{Solver.h}}
+\doxysubsubsection{\texorpdfstring{solveGeneticAlgorithm()}{solveGeneticAlgorithm()}}
+{\footnotesize\ttfamily \label{_solver_8h_a5914694fdde47e7de0ac1f7e6337a22f} 
+\mbox{\hyperlink{struct_solution}{Solution}} solve\+Genetic\+Algorithm (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_dataset}{Dataset}} \&}]{dataset}{}\end{DoxyParamCaption})}
+
+
+
+Resolve o problema da otimização utilizando um algoritmo genético. 
+
+Usa operadores genéticos (seleção, cruzamento e mutação) para evoluir soluções ao longo de várias gerações.
+
+
+\begin{DoxyParams}{Parameters}
+{\em dataset} & Conjunto de paletes disponíveis. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Solução aproximada baseada em evolução genética.
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+Complexidade temporal\+: O(\+G \texorpdfstring{$\ast$}{*} P \texorpdfstring{$\ast$}{*} n), onde G é o número de gerações, P o tamanho da população e n o número de paletes. 
+
+Complexidade espacial\+: O(\+P \texorpdfstring{$\ast$}{*} n), devido ao armazenamento da população.
+\end{DoxyNote}
+Resolve o problema da otimização utilizando um algoritmo genético.
+
+Algoritmo evolutivo que simula a seleção natural. Mantém uma população de soluções candidatas e aplica cruzamento e mutação para evoluir soluções melhores.
+
+
+\begin{DoxyParams}{Parameters}
+{\em dataset} & Estrutura contendo a capacidade do camião e a lista de paletes. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\doxylink{struct_solution}{Solution} Estrutura contendo o lucro total, peso total e as paletes selecionadas.
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+Complexidade temporal\+: Aproximadamente O(\+G \texorpdfstring{$\ast$}{*} P \texorpdfstring{$\ast$}{*} n), onde G é o número de gerações, P é o tamanho da população, e n é o número de paletes. 
+
+Complexidade espacial\+: O(\+P \texorpdfstring{$\ast$}{*} n), para armazenar a população. 
+\end{DoxyNote}
+
+
+Definition at line \mbox{\hyperlink{_solver_8cpp_source_l00157}{157}} of file \mbox{\hyperlink{_solver_8cpp_source}{Solver.\+cpp}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00158\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ POP\_SIZE\ =\ 100;}
+\DoxyCodeLine{00159\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ MAX\_GENERATIONS\ =\ 100;}
+\DoxyCodeLine{00160\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ MUTATION\_RATE\ =\ 0.05;}
+\DoxyCodeLine{00161\ }
+\DoxyCodeLine{00162\ \ \ \ \ \textcolor{keywordtype}{int}\ n\ =\ dataset.\mbox{\hyperlink{struct_dataset_a90b4bec88ec28f9a7680c5f3870995c5}{pallets}}.size();}
+\DoxyCodeLine{00163\ \ \ \ \ \textcolor{keywordtype}{int}\ capacity\ =\ dataset.\mbox{\hyperlink{struct_dataset_a7072473d5fc62266f7cfea2b7dab648b}{capacity}};}
+\DoxyCodeLine{00164\ }
+\DoxyCodeLine{00165\ \ \ \ \ std::mt19937\ rng(\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{unsigned}\textcolor{keyword}{>}(time(\textcolor{keyword}{nullptr})));}
+\DoxyCodeLine{00166\ \ \ \ \ std::uniform\_real\_distribution<>\ probDist(0.0,\ 1.0);}
+\DoxyCodeLine{00167\ \ \ \ \ std::uniform\_int\_distribution<>\ indexDist(0,\ n\ -\/\ 1);}
+\DoxyCodeLine{00168\ }
+\DoxyCodeLine{00169\ \ \ \ \ \textcolor{keyword}{using\ }Individual\ =\ std::vector<bool>;}
+\DoxyCodeLine{00170\ }
+\DoxyCodeLine{00171\ \ \ \ \ \textcolor{keyword}{auto}\ fitness\ =\ [\&](\textcolor{keyword}{const}\ Individual\&\ ind)\ -\/>\ \textcolor{keywordtype}{int}\ \{}
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ weight\ =\ 0,\ profit\ =\ 0;}
+\DoxyCodeLine{00173\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{00174\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (ind[i])\ \{}
+\DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ weight\ +=\ dataset.\mbox{\hyperlink{struct_dataset_a90b4bec88ec28f9a7680c5f3870995c5}{pallets}}[i].weight;}
+\DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ profit\ +=\ dataset.\mbox{\hyperlink{struct_dataset_a90b4bec88ec28f9a7680c5f3870995c5}{pallets}}[i].profit;}
+\DoxyCodeLine{00177\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00179\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (weight\ <=\ capacity)\ ?\ profit\ :\ 0;}
+\DoxyCodeLine{00180\ \ \ \ \ \};}
+\DoxyCodeLine{00181\ }
+\DoxyCodeLine{00182\ \ \ \ \ \textcolor{keyword}{auto}\ generateIndividual\ =\ [\&]()\ -\/>\ Individual\ \{}
+\DoxyCodeLine{00183\ \ \ \ \ \ \ \ \ Individual\ ind(n,\ \textcolor{keyword}{false});}
+\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{00185\ \ \ \ \ \ \ \ \ \ \ \ \ ind[i]\ =\ probDist(rng)\ >\ 0.5;}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ind;}
+\DoxyCodeLine{00188\ \ \ \ \ \};}
+\DoxyCodeLine{00189\ }
+\DoxyCodeLine{00190\ \ \ \ \ \textcolor{keyword}{auto}\ crossover\ =\ [\&](\textcolor{keyword}{const}\ Individual\&\ a,\ \textcolor{keyword}{const}\ Individual\&\ b)\ -\/>\ Individual\ \{}
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ Individual\ child(n);}
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ point\ =\ indexDist(rng);}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ \ \ \ \ child[i]\ =\ (i\ <\ point)\ ?\ a[i]\ :\ b[i];}
+\DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ child;}
+\DoxyCodeLine{00196\ \ \ \ \ \};}
+\DoxyCodeLine{00197\ }
+\DoxyCodeLine{00198\ \ \ \ \ \textcolor{keyword}{auto}\ mutate\ =\ [\&](Individual\&\ ind)\ \{}
+\DoxyCodeLine{00199\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)}
+\DoxyCodeLine{00200\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (probDist(rng)\ <\ MUTATION\_RATE)}
+\DoxyCodeLine{00201\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ind[i]\ =\ !ind[i];}
+\DoxyCodeLine{00202\ \ \ \ \ \};}
+\DoxyCodeLine{00203\ }
+\DoxyCodeLine{00204\ \ \ \ \ std::vector<Individual>\ population(POP\_SIZE);}
+\DoxyCodeLine{00205\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ POP\_SIZE;\ ++i)}
+\DoxyCodeLine{00206\ \ \ \ \ \ \ \ \ population[i]\ =\ generateIndividual();}
+\DoxyCodeLine{00207\ }
+\DoxyCodeLine{00208\ \ \ \ \ Individual\ bestInd;}
+\DoxyCodeLine{00209\ \ \ \ \ \textcolor{keywordtype}{int}\ bestFitness\ =\ 0;}
+\DoxyCodeLine{00210\ }
+\DoxyCodeLine{00211\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ gen\ =\ 0;\ gen\ <\ MAX\_GENERATIONS;\ ++gen)\ \{}
+\DoxyCodeLine{00212\ \ \ \ \ \ \ \ \ std::vector<std::pair<int,\ Individual>>\ scored;}
+\DoxyCodeLine{00213\ }
+\DoxyCodeLine{00214\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ ind\ :\ population)\ \{}
+\DoxyCodeLine{00215\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ f\ =\ fitness(ind);}
+\DoxyCodeLine{00216\ \ \ \ \ \ \ \ \ \ \ \ \ scored.emplace\_back(f,\ ind);}
+\DoxyCodeLine{00217\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (f\ >\ bestFitness)\ \{}
+\DoxyCodeLine{00218\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ bestFitness\ =\ f;}
+\DoxyCodeLine{00219\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ bestInd\ =\ ind;}
+\DoxyCodeLine{00220\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00221\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00222\ }
+\DoxyCodeLine{00223\ \ \ \ \ \ \ \ \ std::sort(scored.rbegin(),\ scored.rend());\ }
+\DoxyCodeLine{00224\ \ \ \ \ \ \ \ \ population.clear();}
+\DoxyCodeLine{00225\ }
+\DoxyCodeLine{00226\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ POP\_SIZE\ /\ 4;\ ++i)}
+\DoxyCodeLine{00227\ \ \ \ \ \ \ \ \ \ \ \ \ population.push\_back(scored[i].second);}
+\DoxyCodeLine{00228\ }
+\DoxyCodeLine{00229\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (population.size()\ <\ POP\_SIZE)\ \{}
+\DoxyCodeLine{00230\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ Individual\&\ parent1\ =\ scored[indexDist(rng)\ \%\ (POP\_SIZE\ /\ 2)].second;}
+\DoxyCodeLine{00231\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ Individual\&\ parent2\ =\ scored[indexDist(rng)\ \%\ (POP\_SIZE\ /\ 2)].second;}
+\DoxyCodeLine{00232\ \ \ \ \ \ \ \ \ \ \ \ \ Individual\ child\ =\ crossover(parent1,\ parent2);}
+\DoxyCodeLine{00233\ \ \ \ \ \ \ \ \ \ \ \ \ mutate(child);}
+\DoxyCodeLine{00234\ \ \ \ \ \ \ \ \ \ \ \ \ population.push\_back(child);}
+\DoxyCodeLine{00235\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00236\ \ \ \ \ \}}
+\DoxyCodeLine{00237\ }
+\DoxyCodeLine{00238\ \ \ \ \ \textcolor{keywordtype}{int}\ totalWeight\ =\ 0;}
+\DoxyCodeLine{00239\ \ \ \ \ std::vector<int>\ selected;}
+\DoxyCodeLine{00240\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{00241\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (bestInd[i])\ \{}
+\DoxyCodeLine{00242\ \ \ \ \ \ \ \ \ \ \ \ \ totalWeight\ +=\ dataset.\mbox{\hyperlink{struct_dataset_a90b4bec88ec28f9a7680c5f3870995c5}{pallets}}[i].weight;}
+\DoxyCodeLine{00243\ \ \ \ \ \ \ \ \ \ \ \ \ selected.push\_back(dataset.\mbox{\hyperlink{struct_dataset_a90b4bec88ec28f9a7680c5f3870995c5}{pallets}}[i].id);}
+\DoxyCodeLine{00244\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00245\ \ \ \ \ \}}
+\DoxyCodeLine{00246\ }
+\DoxyCodeLine{00247\ \ \ \ \ \textcolor{keywordflow}{return}\ \{totalWeight,\ bestFitness,\ selected\};}
+\DoxyCodeLine{00248\ \}}
+
+\end{DoxyCode}
+\Hypertarget{_solver_8h_abf315dde7ab51ffcaa7135d6f2208d42}\index{Solver.h@{Solver.h}!solveGreedy@{solveGreedy}}
+\index{solveGreedy@{solveGreedy}!Solver.h@{Solver.h}}
+\doxysubsubsection{\texorpdfstring{solveGreedy()}{solveGreedy()}}
+{\footnotesize\ttfamily \label{_solver_8h_abf315dde7ab51ffcaa7135d6f2208d42} 
+\mbox{\hyperlink{struct_solution}{Solution}} solve\+Greedy (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_dataset}{Dataset}} \&}]{dataset}{}\end{DoxyParamCaption})}
+
+
+
+Resolve o problema da otimização usando uma abordagem gulosa. 
+
+Ordena as paletes por lucro/peso e seleciona as mais rentáveis até atingir a capacidade máxima.
+
+
+\begin{DoxyParams}{Parameters}
+{\em dataset} & Conjunto de paletes disponíveis. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Solução aproximada utilizando heurística gulosa.
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+Complexidade temporal\+: O(n log n), devido à ordenação das paletes. 
+
+Complexidade espacial\+: O(n), para armazenar as paletes escolhidas.
+\end{DoxyNote}
+Resolve o problema da otimização usando uma abordagem gulosa.
+
+Ordena as paletes com base na razão lucro/peso e as seleciona enquanto houver capacidade. Não garante uma solução ótima, mas é eficiente e útil para grandes conjuntos de dados.
+
+
+\begin{DoxyParams}{Parameters}
+{\em dataset} & Estrutura contendo a capacidade do camião e a lista de paletes. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\doxylink{struct_solution}{Solution} Estrutura contendo o lucro total, peso total e as paletes selecionadas.
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+Complexidade temporal\+: O(n log n), devido à ordenação das paletes. 
+
+Complexidade espacial\+: O(n), para armazenar os objetos ordenados. 
+\end{DoxyNote}
+
+
+Definition at line \mbox{\hyperlink{_solver_8cpp_source_l00113}{113}} of file \mbox{\hyperlink{_solver_8cpp_source}{Solver.\+cpp}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00114\ \ \ \ \ \textcolor{keyword}{struct\ }Item\ \{}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ id,\ weight,\ profit;}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ ratio;}
+\DoxyCodeLine{00117\ \ \ \ \ \};}
+\DoxyCodeLine{00118\ }
+\DoxyCodeLine{00119\ \ \ \ \ std::vector<Item>\ items;}
+\DoxyCodeLine{00120\ }
+\DoxyCodeLine{00121\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ p\ :\ dataset.\mbox{\hyperlink{struct_dataset_a90b4bec88ec28f9a7680c5f3870995c5}{pallets}})\ \{}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ items.push\_back(\{p.id,\ p.weight,\ p.profit,\ (double)p.profit\ /\ p.weight\});}
+\DoxyCodeLine{00123\ \ \ \ \ \}}
+\DoxyCodeLine{00124\ }
+\DoxyCodeLine{00125\ \ \ \ \ std::sort(items.begin(),\ items.end(),\ [](\textcolor{keyword}{const}\ Item\&\ a,\ \textcolor{keyword}{const}\ Item\&\ b)\ \{}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ return\ a.ratio\ >\ b.ratio;}
+\DoxyCodeLine{00127\ \ \ \ \ \});}
+\DoxyCodeLine{00128\ }
+\DoxyCodeLine{00129\ \ \ \ \ \textcolor{keywordtype}{int}\ totalWeight\ =\ 0;}
+\DoxyCodeLine{00130\ \ \ \ \ \textcolor{keywordtype}{int}\ totalProfit\ =\ 0;}
+\DoxyCodeLine{00131\ \ \ \ \ std::vector<int>\ selected;}
+\DoxyCodeLine{00132\ }
+\DoxyCodeLine{00133\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ item\ :\ items)\ \{}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (totalWeight\ +\ item.weight\ <=\ dataset.\mbox{\hyperlink{struct_dataset_a7072473d5fc62266f7cfea2b7dab648b}{capacity}})\ \{}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \ \ \ \ totalWeight\ +=\ item.weight;}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \ \ \ \ totalProfit\ +=\ item.profit;}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \ \ \ \ selected.push\_back(item.id);}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00139\ \ \ \ \ \}}
+\DoxyCodeLine{00140\ }
+\DoxyCodeLine{00141\ \ \ \ \ \textcolor{keywordflow}{return}\ \{totalWeight,\ totalProfit,\ selected\};}
+\DoxyCodeLine{00142\ \}}
+
+\end{DoxyCode}

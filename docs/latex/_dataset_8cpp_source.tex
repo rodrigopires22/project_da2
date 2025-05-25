@@ -1,0 +1,61 @@
+\doxysection{Dataset.\+cpp}
+\hypertarget{_dataset_8cpp_source}{}\label{_dataset_8cpp_source}\index{C:/Users/User/Desktop/DA/project\_da2/src/Dataset.cpp@{C:/Users/User/Desktop/DA/project\_da2/src/Dataset.cpp}}
+\mbox{\hyperlink{_dataset_8cpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_dataset_8cpp_source_l00001}00001\ }
+\DoxyCodeLine{\Hypertarget{_dataset_8cpp_source_l00005}00005\ }
+\DoxyCodeLine{\Hypertarget{_dataset_8cpp_source_l00006}00006\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{_dataset_8h}{../include/Dataset.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_dataset_8cpp_source_l00007}00007\ \textcolor{preprocessor}{\#include\ <fstream>}}
+\DoxyCodeLine{\Hypertarget{_dataset_8cpp_source_l00008}00008\ \textcolor{preprocessor}{\#include\ <sstream>}}
+\DoxyCodeLine{\Hypertarget{_dataset_8cpp_source_l00009}00009\ \textcolor{preprocessor}{\#include\ <iostream>}}
+\DoxyCodeLine{\Hypertarget{_dataset_8cpp_source_l00010}00010\ }
+\DoxyCodeLine{\Hypertarget{_dataset_8cpp_source_l00024}\mbox{\hyperlink{_dataset_8h_a62941e337fa81aae7831d5c4b3267c97}{00024}}\ \mbox{\hyperlink{struct_dataset}{Dataset}}\ \mbox{\hyperlink{_dataset_8cpp_a62941e337fa81aae7831d5c4b3267c97}{loadDataset}}(\textcolor{keyword}{const}\ std::string\&\ datasetId)\ \{}
+\DoxyCodeLine{\Hypertarget{_dataset_8cpp_source_l00025}00025\ \ \ \ \ \mbox{\hyperlink{struct_dataset}{Dataset}}\ dataset;}
+\DoxyCodeLine{\Hypertarget{_dataset_8cpp_source_l00026}00026\ \ \ \ \ std::string\ base\ =\ \textcolor{stringliteral}{"{}data/"{}};}
+\DoxyCodeLine{\Hypertarget{_dataset_8cpp_source_l00027}00027\ }
+\DoxyCodeLine{\Hypertarget{_dataset_8cpp_source_l00028}00028\ \ \ \ \ \textcolor{comment}{//\ Abre\ o\ ficheiro\ com\ informações\ do\ caminhão\ e\ número\ de\ pallets}}
+\DoxyCodeLine{\Hypertarget{_dataset_8cpp_source_l00029}00029\ \ \ \ \ std::ifstream\ truckFile(base\ +\ \textcolor{stringliteral}{"{}TruckAndPallets\_"{}}\ +\ datasetId\ +\ \textcolor{stringliteral}{"{}.csv"{}});}
+\DoxyCodeLine{\Hypertarget{_dataset_8cpp_source_l00030}00030\ \ \ \ \ \textcolor{keywordflow}{if}\ (!truckFile.is\_open())\ \{}
+\DoxyCodeLine{\Hypertarget{_dataset_8cpp_source_l00031}00031\ \ \ \ \ \ \ \ \ std::cerr\ <<\ \textcolor{stringliteral}{"{}Erro\ ao\ abrir\ ficheiro\ TruckAndPallets\_"{}}\ <<\ datasetId\ <<\ \textcolor{stringliteral}{"{}.csv\(\backslash\)n"{}};}
+\DoxyCodeLine{\Hypertarget{_dataset_8cpp_source_l00032}00032\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ dataset;}
+\DoxyCodeLine{\Hypertarget{_dataset_8cpp_source_l00033}00033\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_dataset_8cpp_source_l00034}00034\ }
+\DoxyCodeLine{\Hypertarget{_dataset_8cpp_source_l00035}00035\ \ \ \ \ std::string\ line;}
+\DoxyCodeLine{\Hypertarget{_dataset_8cpp_source_l00036}00036\ \ \ \ \ getline(truckFile,\ line);\ \ \textcolor{comment}{//\ Ignora\ a\ linha\ de\ cabeçalho}}
+\DoxyCodeLine{\Hypertarget{_dataset_8cpp_source_l00037}00037\ \ \ \ \ getline(truckFile,\ line);\ \ \textcolor{comment}{//\ Lê\ a\ linha\ com\ os\ dados}}
+\DoxyCodeLine{\Hypertarget{_dataset_8cpp_source_l00038}00038\ \ \ \ \ std::stringstream\ ss(line);}
+\DoxyCodeLine{\Hypertarget{_dataset_8cpp_source_l00039}00039\ \ \ \ \ std::string\ token;}
+\DoxyCodeLine{\Hypertarget{_dataset_8cpp_source_l00040}00040\ }
+\DoxyCodeLine{\Hypertarget{_dataset_8cpp_source_l00041}00041\ \ \ \ \ getline(ss,\ token,\ \textcolor{charliteral}{','});}
+\DoxyCodeLine{\Hypertarget{_dataset_8cpp_source_l00042}00042\ \ \ \ \ dataset.\mbox{\hyperlink{struct_dataset_a7072473d5fc62266f7cfea2b7dab648b}{capacity}}\ =\ std::stoi(token);\ \ }
+\DoxyCodeLine{\Hypertarget{_dataset_8cpp_source_l00043}00043\ \ \ \ \ getline(ss,\ token,\ \textcolor{charliteral}{','});}
+\DoxyCodeLine{\Hypertarget{_dataset_8cpp_source_l00044}00044\ \ \ \ \ dataset.\mbox{\hyperlink{struct_dataset_aeedc30bdbe746643dc82a1f37214bfb7}{numPallets}}\ =\ std::stoi(token);\ \ }
+\DoxyCodeLine{\Hypertarget{_dataset_8cpp_source_l00045}00045\ \ \ \ \ truckFile.close();}
+\DoxyCodeLine{\Hypertarget{_dataset_8cpp_source_l00046}00046\ }
+\DoxyCodeLine{\Hypertarget{_dataset_8cpp_source_l00047}00047\ \ \ \ \ \textcolor{comment}{//\ Abre\ o\ ficheiro\ com\ os\ dados\ individuais\ dos\ pallets}}
+\DoxyCodeLine{\Hypertarget{_dataset_8cpp_source_l00048}00048\ \ \ \ \ std::ifstream\ palletsFile(base\ +\ \textcolor{stringliteral}{"{}Pallets\_"{}}\ +\ datasetId\ +\ \textcolor{stringliteral}{"{}.csv"{}});}
+\DoxyCodeLine{\Hypertarget{_dataset_8cpp_source_l00049}00049\ \ \ \ \ \textcolor{keywordflow}{if}\ (!palletsFile.is\_open())\ \{}
+\DoxyCodeLine{\Hypertarget{_dataset_8cpp_source_l00050}00050\ \ \ \ \ \ \ \ \ std::cerr\ <<\ \textcolor{stringliteral}{"{}Erro\ ao\ abrir\ ficheiro\ Pallets\_"{}}\ <<\ datasetId\ <<\ \textcolor{stringliteral}{"{}.csv\(\backslash\)n"{}};}
+\DoxyCodeLine{\Hypertarget{_dataset_8cpp_source_l00051}00051\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ dataset;}
+\DoxyCodeLine{\Hypertarget{_dataset_8cpp_source_l00052}00052\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_dataset_8cpp_source_l00053}00053\ }
+\DoxyCodeLine{\Hypertarget{_dataset_8cpp_source_l00054}00054\ \ \ \ \ getline(palletsFile,\ line);\ \ \textcolor{comment}{//\ Ignora\ o\ cabeçalho}}
+\DoxyCodeLine{\Hypertarget{_dataset_8cpp_source_l00055}00055\ \ \ \ \ \textcolor{keywordflow}{while}\ (getline(palletsFile,\ line))\ \{}
+\DoxyCodeLine{\Hypertarget{_dataset_8cpp_source_l00056}00056\ \ \ \ \ \ \ \ \ std::stringstream\ ssP(line);}
+\DoxyCodeLine{\Hypertarget{_dataset_8cpp_source_l00057}00057\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_pallet}{Pallet}}\ p;}
+\DoxyCodeLine{\Hypertarget{_dataset_8cpp_source_l00058}00058\ }
+\DoxyCodeLine{\Hypertarget{_dataset_8cpp_source_l00059}00059\ \ \ \ \ \ \ \ \ getline(ssP,\ token,\ \textcolor{charliteral}{','});}
+\DoxyCodeLine{\Hypertarget{_dataset_8cpp_source_l00060}00060\ \ \ \ \ \ \ \ \ p.\mbox{\hyperlink{struct_pallet_a9e5a10be32ec564eeb8c62f057394cb0}{id}}\ =\ std::stoi(token);\ \ }
+\DoxyCodeLine{\Hypertarget{_dataset_8cpp_source_l00061}00061\ \ \ \ \ \ \ \ \ getline(ssP,\ token,\ \textcolor{charliteral}{','});}
+\DoxyCodeLine{\Hypertarget{_dataset_8cpp_source_l00062}00062\ \ \ \ \ \ \ \ \ p.\mbox{\hyperlink{struct_pallet_a216a90fe257bc40e1f5412dc9627b322}{weight}}\ =\ std::stoi(token);\ \ }
+\DoxyCodeLine{\Hypertarget{_dataset_8cpp_source_l00063}00063\ \ \ \ \ \ \ \ \ getline(ssP,\ token,\ \textcolor{charliteral}{','});}
+\DoxyCodeLine{\Hypertarget{_dataset_8cpp_source_l00064}00064\ \ \ \ \ \ \ \ \ p.\mbox{\hyperlink{struct_pallet_a73f875ee2c33b680d2d4ed218636a9fc}{profit}}\ =\ std::stoi(token);\ \ }
+\DoxyCodeLine{\Hypertarget{_dataset_8cpp_source_l00065}00065\ }
+\DoxyCodeLine{\Hypertarget{_dataset_8cpp_source_l00066}00066\ \ \ \ \ \ \ \ \ dataset.\mbox{\hyperlink{struct_dataset_a90b4bec88ec28f9a7680c5f3870995c5}{pallets}}.push\_back(p);}
+\DoxyCodeLine{\Hypertarget{_dataset_8cpp_source_l00067}00067\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_dataset_8cpp_source_l00068}00068\ }
+\DoxyCodeLine{\Hypertarget{_dataset_8cpp_source_l00069}00069\ \ \ \ \ palletsFile.close();}
+\DoxyCodeLine{\Hypertarget{_dataset_8cpp_source_l00070}00070\ \ \ \ \ \textcolor{keywordflow}{return}\ dataset;}
+\DoxyCodeLine{\Hypertarget{_dataset_8cpp_source_l00071}00071\ \}}
+
+\end{DoxyCode}

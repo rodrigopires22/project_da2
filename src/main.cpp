@@ -1,10 +1,21 @@
+/**
+ * @file main.cpp
+ * @brief Ponto de entrada principal para o Otimizador de Paletes.
+ * 
+ * Permite ao utilizador carregar datasets e escolher entre diferentes algoritmos de otimização
+ * para selecionar paletes com base em lucro e peso, respeitando a capacidade do caminhão.
+ */
+
 #include <iostream>
 #include <sstream>
 #include <iomanip>
 #include <chrono> 
-#include "Dataset.h"
-#include "Solver.h"
+#include "../include/Dataset.h"
+#include "../include/Solver.h"
 
+/**
+ * @brief Mostra o menu principal ao utilizador.
+ */
 void showMainMenu() {
     std::cout << "=== Otimizador de Paletes ===\n";
     std::cout << "1. Carregar Dataset e Executar Algoritmo\n";
@@ -12,6 +23,9 @@ void showMainMenu() {
     std::cout << "Escolha uma opção: ";
 }
 
+/**
+ * @brief Mostra o menu de seleção de algoritmos.
+ */
 void showAlgorithmMenu() {
     std::cout << "\n--- Escolha o Algoritmo ---\n";
     std::cout << "1. Força Bruta\n";
@@ -22,6 +36,23 @@ void showAlgorithmMenu() {
     std::cout << "Opção: ";
 }
 
+/**
+ * @brief Função principal do programa.
+ * 
+ * Esta função permite ao utilizador:
+ * - Carregar datasets de paletes;
+ * - Visualizar os dados carregados;
+ * - Selecionar e executar um dos algoritmos disponíveis;
+ * - Observar os resultados (lucro total, peso total e paletes selecionadas), assim como o tempo de execução.
+ * 
+ * Algoritmos disponíveis:
+ * - Força Bruta: Garante solução ótima, mas com complexidade exponencial O(2^n).
+ * - Programação Dinâmica: Solução ótima com complexidade O(n * W), onde W é a capacidade do caminhão.
+ * - Guloso: Solução aproximada com tempo linearithmic O(n log n), baseada em razão lucro/peso.
+ * - Algoritmo Genético: Solução heurística com tempo dependente de parâmetros (gerações, população, etc).
+ * 
+ * @return int Código de saída do programa (0 se encerrado com sucesso).
+ */
 int main() {
     int opcao;
 
@@ -41,6 +72,7 @@ int main() {
                 std::string datasetId = ss.str();
 
                 Dataset d = loadDataset(datasetId);
+
                 std::cout << "\nCapacidade do camião: " << d.capacity << " kg\n";
                 std::cout << "Número de paletes: " << d.pallets.size() << "\n";
                 for (const auto& p : d.pallets) {
@@ -54,6 +86,7 @@ int main() {
 
                     switch (algChoice) {
                         case 1: {
+                            /**< Força Bruta - Solução ótima (Complexidade: O(2^n)) */
                             auto start = std::chrono::high_resolution_clock::now();
                             Solution sol = solveBruteForce(d);
                             auto end = std::chrono::high_resolution_clock::now();
@@ -70,6 +103,7 @@ int main() {
                             break;
                         }
                         case 2: {
+                            /**< Programação Dinâmica - Solução ótima (Complexidade: O(n * W)) */
                             auto start = std::chrono::high_resolution_clock::now();
                             Solution sol = solveDynamicProgramming(d);
                             auto end = std::chrono::high_resolution_clock::now();
@@ -86,6 +120,7 @@ int main() {
                             break;
                         }
                         case 3: {
+                            /**< Guloso - Solução aproximada (Complexidade: O(n log n)) */
                             auto start = std::chrono::high_resolution_clock::now();
                             Solution sol = solveGreedy(d);
                             auto end = std::chrono::high_resolution_clock::now();
@@ -102,6 +137,7 @@ int main() {
                             break;
                         }
                         case 4: {
+                            /**< Algoritmo Genético - Solução aproximada (Complexidade variável) */
                             auto start = std::chrono::high_resolution_clock::now();
                             Solution sol = solveGeneticAlgorithm(d);
                             auto end = std::chrono::high_resolution_clock::now();
@@ -141,3 +177,5 @@ int main() {
 
     return 0;
 }
+
+
